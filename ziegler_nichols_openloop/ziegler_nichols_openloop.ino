@@ -1,27 +1,27 @@
 #include <Arduino.h>
 
-// Pin untuk sensor LM35
+// Pin for LM35
 #define PIN_LM35 A0
 
 // Pin PWM output
 #define PIN_PWM 9
 
-// Variabel untuk duty cycle
-const int dutyCycle = 50; // Duty cycle tetap pada 50%
+// Duty cycle variables
+const int dutyCycle = 50; // Stay on 50%
 float temperature = 0.0;
 float previousTemperature = 0.0;
 unsigned long lastTime = 0;
 unsigned long currentTime = 0;
 unsigned long startTime = 0;
 
-// Variabel untuk logging data
+// Logging data variable
 bool logData = false;
 
 void setup() {
-  Serial.begin(9600); // Inisialisasi komunikasi Serial dengan baud rate 9600
+  Serial.begin(9600);
 
-  pinMode(PIN_LM35, INPUT); // Set pin LM35 sebagai input
-  pinMode(PIN_PWM, OUTPUT); // Set pin PWM sebagai output
+  pinMode(PIN_LM35, INPUT); // LM35 as input
+  pinMode(PIN_PWM, OUTPUT); // PWM pin as output
 
   // Tampilkan pesan awal
   Serial.println("=== Ziegler-Nichols PWM and Temperature Measurement ===");
@@ -38,30 +38,30 @@ void setup() {
 }
 
 void loop() {
-  // Catat waktu saat ini
+  // Current time set
   currentTime = millis();
 
-  // Baca nilai ADC dari LM35
+  // Read analog value from LM35
   int adcValue = analogRead(PIN_LM35);
 
-  // Konversi nilai ADC menjadi suhu dalam derajat Celcius
+  // Analog value -> temperature in Celcius
   previousTemperature = temperature;
   temperature = adcValue * 4.887585533 / 10;
 
-  // Tampilkan suhu pada Serial Monitor
+  // Show time, duty cycle, and temperature on serial monitor
   //Serial.print("Time (ms): ");
   //Serial.print(currentTime - startTime);
   //Serial.print(", Duty Cycle: ");
   //Serial.print(dutyCycle); // Menampilkan duty cycle dalam persen
   Serial.print("%, Temperature: ");
-  Serial.println(temperature, 2); // Tampilkan dengan 2 desimal
+  Serial.println(temperature, 2); // 2 decimal points
 
   // Serial Plotter Output
   if (logData) {
-    Serial.print(temperature, 2); // Suhu dengan 2 desimal (y-axis)
+    Serial.print(temperature, 2); //  2 decimal points
     Serial.print(",");
-    Serial.println(currentTime - startTime); // Waktu dalam ms (x-axis)
+    Serial.println(currentTime - startTime); // Time miliseconds on X-axis
   }
 
-  delay(1000); // Delay 1 detik sebelum pembacaan berikutnya
+  delay(1000); // One second delay
 }
